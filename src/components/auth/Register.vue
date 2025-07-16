@@ -1,30 +1,115 @@
 <template>
   <section id="form-container">
     <h1 class="title">Selamat Datang Pengguna Baru</h1>
-    <form action="" method="post">
+    <form action="" autocomplete="off">
       <div class="form-group">
-        <input type="emal" id="email" placeholder="Email" required />
+        <input
+          type="email"
+          id="email"
+          placeholder="Email"
+          required
+          v-model="email"
+        />
+        <span id="errorInfo" v-if="emailError"> {{ emailError }}</span>
       </div>
       <div class="form-group">
-        <input type="text" id="username" placeholder="Username" required />
+        <input
+          type="text"
+          id="username"
+          placeholder="Username"
+          required
+          v-model="username"
+        />
+        <span id="errorInfo" v-if="usernameError"> {{ usernameError }}</span>
       </div>
       <div class="form-group">
-        <input type="password" id="password" placeholder="Password" required />
+        <input
+          :type="checked ? 'text' : 'password'"
+          id="password"
+          placeholder="Password"
+          required
+          v-model="password"
+        />
+        <span id="errorInfo" v-if="passwordError"> {{ passwordError }}</span>
         <div id="showPasswordContainer">
-          <input type="checkbox" name="showPassword" id="showPassword" />
+          <input type="checkbox" id="showPassword" v-model="checked" />
           <label for="showPassword">Show password</label>
         </div>
       </div>
       <div class="form-group">
-        <button disabled="disabled" id="submitBtn">Submit</button>
+        <button
+          type="submit"
+          :disabled="!isFormValid"
+          :style="isFormValid ? 'background : red; color : white;' : ''"
+          id="submitBtn"
+          @click="saveUser()"
+        >
+          Submit
+        </button>
       </div>
     </form>
+    <p>Sudah Punya Akun? <a href="#">Masuk</a></p>
   </section>
 </template>
 
 <script>
 export default {
   name: "RegisterForm",
+  data() {
+    return {
+      checked: "",
+      email: "",
+      username: "",
+      password: "",
+    };
+  },
+  computed: {
+    emailError() {
+      if (this.email.length == 0) {
+        return "Email tidak boleh kosong";
+      }
+      return "";
+    },
+
+    usernameError() {
+      if (this.username.length == 0) {
+        return "Username tidak boleh kosong";
+      } else if (this.username.length < 3) {
+        return "Panjang minimum username adalah 3 karakter ";
+      }
+      return "";
+    },
+
+    passwordError() {
+      if (this.password.length == 0) {
+        return "Password tidak boleh kosong";
+      } else if(this.password.length < 6) {
+        return "Panjang minimum password adalah 6 karakter"
+      }
+      return "";
+    },
+
+    //Untuk mengecek apakah ada error jika tidak ada lanjut
+    isFormValid() {
+      return (
+        this.emailError == "" &&
+        this.usernameError == "" &&
+        this.passwordError == ""
+      );
+    },
+  },
+
+  methods: {
+    saveUser() {
+      alert("Daftar Pengguna Baru Sukses!");
+    },
+
+    // handleChange() {
+    //   return this.checked;
+    // },
+  },
+
+  watch: {},
 };
 </script>
 
@@ -58,9 +143,22 @@ input {
 }
 
 #submitBtn {
+  border: none;
   margin-top: 0.5rem;
   border-radius: 5px;
   padding-block: 0.5rem;
   padding-inline: 5rem;
+  cursor: pointer;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: start;
+}
+
+#errorInfo {
+  color: red;
 }
 </style>
