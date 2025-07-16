@@ -1,4 +1,4 @@
-# private_shoppinglist
+# Belanjaku-App
 
 ## Project setup
 ```
