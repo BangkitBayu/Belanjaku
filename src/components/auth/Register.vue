@@ -1,7 +1,7 @@
 <template>
   <section id="form-container">
     <h1 class="title">Selamat Datang Pengguna Baru</h1>
-    <form action="" autocomplete="off">
+    <form action="" autocomplete="off" @submit.prevent="onSubmit">
       <div class="form-group">
         <input
           type="email"
@@ -57,6 +57,7 @@ export default {
   name: "RegisterForm",
   data() {
     return {
+      users: [],
       checked: "",
       email: "",
       username: "",
@@ -83,8 +84,8 @@ export default {
     passwordError() {
       if (this.password.length == 0) {
         return "Password tidak boleh kosong";
-      } else if(this.password.length < 6) {
-        return "Panjang minimum password adalah 6 karakter"
+      } else if (this.password.length < 6) {
+        return "Panjang minimum password adalah 6 karakter";
       }
       return "";
     },
@@ -100,13 +101,28 @@ export default {
   },
 
   methods: {
-    saveUser() {
-      alert("Daftar Pengguna Baru Sukses!");
+    onSubmit(e) {
+      e.preventDefault();
     },
 
-    // handleChange() {
-    //   return this.checked;
-    // },
+    saveUser() {
+      let data = {
+        id: "user-" + new Date().getTime(),
+        email: this.email,
+        username: this.username,
+        password: this.password,
+        date: new Date().toISOString(),
+      };
+
+      if (this.users.push(data)) {
+        localStorage.setItem("users", JSON.stringify(this.users));
+        alert("Pengguna Baru Berhasil Daftar");
+      }
+    },
+  },
+
+  mounted() {
+    console.log("mounted");
   },
 
   watch: {},
